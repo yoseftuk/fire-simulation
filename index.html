@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="og:title" content="Fire Simulation"/>
+    <meta name="og:description" content="Trying to simulate fire using canvas2d"/>
+    <meta name="og:image" content="http://yoseftuk.github.io/fire/og-image.png"/>
+    <title>Fire Simulation</title>
+    <style>
+        html body {
+            padding:0;
+        }
+        canvas {
+            display:block;
+            position: fixed;
+            width:500px;
+            height: 500px;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            margin:auto;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+<canvas width="500" height="500"></canvas>
+<script>
+let PARTICLE_COUNT = 30;
+let PARTICLE_SIZE = 40;
+let PARTICLE_MIN_SPEED = 1;
+let PARTICLE_MAX_SPEED = 3;
+let PARTICLE_LIFETIME = 1.2;
+let PARTICLE_MAX_COLOR = 60;
+let PARTICLE_MIN_COLOR = 0;
+let PARTICLE_MIN_LUMINOSITY = 35;
+let PARTICLE_MAX_LUMINOSITY = 65;
+let MAX_WIND_SPEED = .5;
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function Particle() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height + PARTICLE_SIZE;
+    const lumX = 1 + this.x / canvas.width * Math.PI / 1.4;
+    this.luminosity = PARTICLE_MIN_LUMINOSITY + (PARTICLE_MAX_LUMINOSITY - PARTICLE_MIN_LUMINOSITY) * (2 + Math.sin(lumX * 4) + Math.sin(lumX * 7)) /4
+    this.birthday = new Date().getTime();
+    this.speed = PARTICLE_MIN_SPEED + Math.random() * PARTICLE_MAX_SPEED * (2 + Math.sin(lumX * 4) + Math.sin(lumX * 7)) /4;
+    particles.push(this);
+    this.age = () => new Date().getTime() - this.birthday;
+    this.draw = () => {
+        const color = Math.round(PARTICLE_MAX_COLOR-(PARTICLE_MAX_COLOR-PARTICLE_MIN_COLOR)*(this.age()/1000/PARTICLE_LIFETIME));
+        const alpha = Math.min(1, 1.5 - this.age()/1000/PARTICLE_LIFETIME);
+        const g = ctx.createRadialGradient(this.x, this.y, 1, this.x, this.y, PARTICLE_SIZE);
+        g.addColorStop(0, `hsla(${color}, 100%, ${this.luminosity}%, ${alpha})`);
+        g.addColorStop(1, `hsla(${color}, 100%, ${this.luminosity}%, 0)`);
+        ctx.beginPath();
+        ctx.fillStyle = g;
+        ctx.arc(this.x, this.y, PARTICLE_SIZE, 0, Math.PI*2);
+        ctx.fill();
+        ctx.closePath();
+    };
+    this.die = () => {
+        particles = particles.filter(p => p !== this);
+    };
+    this.move = (time_over) => {
+        if(this.age()/1000 > PARTICLE_LIFETIME) return this.die();
+        this.x += wind.speed / (PARTICLE_MAX_SPEED-this.speed/2) * time_over / 10;
+        this.y -= this.speed * time_over / 10;
+        this.draw();
+    };
+}
+function Wind() {
+    this.speed = 0;
+    this.t = 0;
+    this.update = () => {
+        this.speed = (2 + Math.sin(this.t*4) + Math.sin(this.t*3)) * MAX_WIND_SPEED;
+        this.t += .01;
+    }
+}
+const wind = new Wind();
+function loop(last_frame = new Date().getTime()) {
+    const now = new Date().getTime();
+    const diff = now - last_frame;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => p.move(diff));
+    for(let i=0;i<PARTICLE_COUNT;i++) {new Particle();}
+    wind.update();
+    requestAnimationFrame(() => loop(now));
+}
+loop();
+</script>
+</body>
+</html>
