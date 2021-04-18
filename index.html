@@ -29,7 +29,7 @@
 <canvas width="500" height="500"></canvas>
 <script>
 let PARTICLE_COUNT = 30;
-let PARTICLE_SIZE = 35;
+let PARTICLE_SIZE = 34;
 let PARTICLE_MIN_SPEED = 1.5;
 let PARTICLE_MAX_SPEED = 2.5;
 let PARTICLE_LIFETIME = 1.2;
@@ -53,7 +53,7 @@ function Particle() {
     this.draw = () => {
         const color = Math.round(PARTICLE_MAX_COLOR-(PARTICLE_MAX_COLOR-PARTICLE_MIN_COLOR)*(this.age()/1000/PARTICLE_LIFETIME));
         const alpha = Math.min(1, 1.5 - this.age()/1000/PARTICLE_LIFETIME);
-        const g = ctx.createRadialGradient(this.x, this.y, 1, this.x, this.y, PARTICLE_SIZE);
+        const g = ctx.createRadialGradient(this.x, this.y, PARTICLE_SIZE*Math.max(0,alpha-.5), this.x, this.y, PARTICLE_SIZE);
         g.addColorStop(0, `hsla(${color}, 100%, ${this.luminosity}%, ${alpha})`);
         g.addColorStop(1, `hsla(${color}, 100%, ${this.luminosity}%, 0)`);
         ctx.beginPath();
