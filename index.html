@@ -28,10 +28,10 @@
 <body>
 <canvas width="500" height="500"></canvas>
 <script>
-let PARTICLE_COUNT = 20;
-let PARTICLE_SIZE = 40;
-let PARTICLE_MIN_SPEED = 1.3;
-let PARTICLE_MAX_SPEED = 2.6;
+let PARTICLE_COUNT = 23;
+let PARTICLE_SIZE = 45;
+let PARTICLE_MIN_SPEED = 1.5;
+let PARTICLE_MAX_SPEED = 2.5;
 let PARTICLE_LIFETIME = 1.2;
 let PARTICLE_MAX_COLOR = 60;
 let PARTICLE_MIN_COLOR = 0;
@@ -42,7 +42,7 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
 function Particle() {
-    this.x = Math.random() * canvas.width;
+    this.x = Math.random() * (canvas.width + PARTICLE_SIZE) - PARTICLE_SIZE;
     this.y = canvas.height + PARTICLE_SIZE;
     const lumX = 1 + this.x / canvas.width * Math.PI / 1.4;
     this.luminosity = PARTICLE_MIN_LUMINOSITY + (PARTICLE_MAX_LUMINOSITY - PARTICLE_MIN_LUMINOSITY) * (2 + Math.sin(lumX * 4) + Math.sin(lumX * 7)) /4
