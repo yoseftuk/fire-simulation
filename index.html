@@ -53,7 +53,7 @@ function Particle() {
     this.draw = () => {
         const color = Math.round(PARTICLE_MAX_COLOR-(PARTICLE_MAX_COLOR-PARTICLE_MIN_COLOR)*(this.age()/1000/PARTICLE_LIFETIME));
         const alpha = Math.min(1, 1.5 - this.age()/1000/PARTICLE_LIFETIME);
-        const g = ctx.createRadialGradient(this.x, this.y, PARTICLE_SIZE*Math.max(0,alpha-.5), this.x, this.y, PARTICLE_SIZE);
+        const g = ctx.createRadialGradient(this.x, this.y, PARTICLE_SIZE*Math.max(0,alpha-.5), this.x, this.y, PARTICLE_SIZE*alpha+.5);
         g.addColorStop(0, `hsla(${color}, 100%, ${this.luminosity}%, ${alpha})`);
         g.addColorStop(1, `hsla(${color}, 100%, ${this.luminosity}%, 0)`);
         ctx.beginPath();
