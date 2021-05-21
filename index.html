@@ -5,6 +5,7 @@
     <meta name="og:title" content="Fire Simulation"/>
     <meta name="og:description" content="Trying to simulate fire using canvas2d"/>
     <meta name="og:image" content="http://yoseftuk.github.io/fire-simulation/og-image.png"/>
+    <meta name="viewport" content="width=viewport-width,initial-scale=1.0"/>
     <title>Fire Simulation</title>
     <link rel="icon" href="favicon.png"/>
     <style>
@@ -30,25 +31,36 @@
             margin:auto;
             filter: url(#filter);
         }
+        @media all and (max-width:520px) {
+            body{
+                background-color: black;
+            }
+            #wrapper{
+                width: 100%;
+                top: auto;
+            }
+        }
     </style>
 </head>
 <body>
 <svg>
     <filter id="filter">
-        <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10" />
-        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 8 -5" result="goo" />
-        <feBlend in2="goo" in="SourceGraphic" result="mix" />
+        <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="8" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 5 -3" result="goo" />
+        <feGaussianBlur in="SourceGraphic" result="blur2" stdDeviation="2" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 2 -1" result="goo2" />
+        <feBlend in2="goo" in="goo2" result="mix" />
     </filter>
 </svg>
 <div id="wrapper">
 <canvas width="500" height="500"></canvas>
 </div>
 <script>
-let PARTICLE_COUNT = 10;
-let PARTICLE_SIZE = 30;
-let PARTICLE_MIN_SPEED = 1.5;
+let PARTICLE_COUNT = 30;
+let PARTICLE_SIZE = 25;
+let PARTICLE_MIN_SPEED = .7;
 let PARTICLE_MAX_SPEED = 2.5;
-let PARTICLE_LIFETIME = 1.2;
+let PARTICLE_LIFETIME = 1.5;
 let PARTICLE_MAX_COLOR = 60;
 let PARTICLE_MIN_COLOR = 0;
 let PARTICLE_MIN_LUMINOSITY = 30;
